@@ -1,0 +1,9 @@
+{
+  "primera": { "id": 140, "name": "Primera División (La Liga)" },
+  "segunda": { "id": 141, "name": "Segunda División" },
+  "liga_f": {
+    "id": null,
+    "name": "Liga F",
+    "_pendiente": "Verifica el ID correcto con: API_FOOTBALL_KEY=tu_clave node scripts/find-league-id.js \"Liga F\" — y comprueba también que tu plan (gratis o de pago) cubra fixtures de esta competición antes de rellenar el id."
+  }
+}

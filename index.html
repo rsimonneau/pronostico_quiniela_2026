@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiniela · Pronóstico semanal</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quiniela">
+<meta name="theme-color" content="#1B3A2C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDE8DA;
+    --paper-line:#D8CFB8;
+    --ink:#1B3A2C;
+    --ink-soft:#3F5C4E;
+    --red:#B3122A;
+    --gold:#B08A2E;
+    --card:#FBF9F2;
+    --shadow: 0 2px 0 rgba(27,58,44,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:env(safe-area-inset-bottom);
+    min-height:100vh;
+  }
+  .mono{font-family:'Space Mono', ui-monospace, monospace;}
+
+  header.top{
+    padding:calc(20px + env(safe-area-inset-top)) 20px 16px;
+    border-bottom:2px dashed var(--paper-line);
+    background:var(--paper);
+    position:sticky; top:0; z-index:10;
+  }
+  header.top .row{display:flex; justify-content:space-between; align-items:baseline; gap:12px;}
+  header.top h1{
+    font-size:20px; margin:0; letter-spacing:0.01em; font-weight:700;
+  }
+  header.top .jornada-tag{
+    font-family:'Space Mono', monospace; font-size:13px; color:var(--ink-soft);
+  }
+  nav.tabs{display:flex; gap:6px; margin-top:14px; overflow-x:auto;}
+  nav.tabs button{
+    border:1px solid var(--paper-line); background:var(--card); color:var(--ink-soft);
+    padding:8px 12px; border-radius:999px; font-size:13px; font-weight:600;
+    font-family:inherit; cursor:pointer; white-space:nowrap;
+  }
+  nav.tabs button.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+  main{padding:18px 16px 90px; max-width:640px; margin:0 auto;}
+  .empty{
+    text-align:center; padding:60px 20px; color:var(--ink-soft);
+  }
+  .empty .big{font-size:15px; margin-bottom:14px; line-height:1.5;}
+
+  button.primary{
+    background:var(--ink); color:var(--paper); border:none; border-radius:10px;
+    padding:12px 18px; font-size:15px; font-weight:600; font-family:inherit; cursor:pointer;
+  }
+  button.ghost{
+    background:transparent; color:var(--ink); border:1.5px solid var(--ink);
+    border-radius:10px; padding:10px 16px; font-size:14px; font-weight:600; font-family:inherit; cursor:pointer;
+  }
+  button.small{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:8px;
+    padding:6px 10px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--ink);
+  }
+  button.link{background:none; border:none; color:var(--red); font-family:inherit; font-size:13px; cursor:pointer; padding:4px 0;}
+
+  input[type=text], input[type=number], select{
+    width:100%; padding:10px 12px; border:1px solid var(--paper-line); border-radius:8px;
+    background:var(--card); font-family:inherit; font-size:14px; color:var(--ink);
+  }
+  label.field{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px; font-weight:600;}
+  .field-group{margin-bottom:14px;}
+
+  /* --- Coupon / match card (estilo boleto) --- */
+  .coupon{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:12px;
+    margin-bottom:12px; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .coupon-head{
+    display:flex; align-items:center; gap:12px; padding:14px 14px 12px; cursor:pointer;
+  }
+  .coupon-num{
+    font-family:'Space Mono', monospace; font-weight:700; font-size:15px; color:var(--ink-soft);
+    width:22px; flex-shrink:0;
+  }
+  .coupon-teams{flex:1; min-width:0;}
+  .coupon-teams .vs{font-size:15px; font-weight:600; line-height:1.3;}
+  .coupon-teams .liga{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .coupon-caret{font-size:12px; color:var(--ink-soft); transition:transform .15s;}
+  .coupon.open .coupon-caret{transform:rotate(180deg);}
+
+  .prob-bar{
+    display:flex; height:8px; border-radius:6px; overflow:hidden; margin:0 14px 12px;
+  }
+  .prob-bar span{display:block; height:100%;}
+  .prob-bar .h{background:var(--ink);}
+  .prob-bar .d{background:var(--gold);}
+  .prob-bar .a{background:var(--red);}
+  .prob-labels{
+    display:flex; justify-content:space-between; margin:0 14px 12px; font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft);
+  }
+  .sign-pill{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:50%; border:2px solid var(--ink);
+    font-family:'Space Mono',monospace; font-weight:700; font-size:13px; margin-right:6px;
+  }
+  .sign-row{display:flex; align-items:center; gap:8px; padding:0 14px 14px; font-size:13px;}
+  .sign-row .double{color:var(--red); font-weight:600;}
+  .notes{padding:0 14px 12px; font-size:12px; color:var(--ink-soft); line-height:1.5;}
+
+  .players-panel{
+    border-top:1px dashed var(--paper-line); padding:14px; display:none; background:#F5F2E8;
+  }
+  .coupon.open .players-panel{display:block;}
+  .players-cols{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .players-cols h4{margin:0 0 8px; font-size:12px; text-transform:none; color:var(--ink-soft); font-weight:700;}
+  .player-row{
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+    padding:6px 0; border-bottom:1px solid var(--paper-line); font-size:13px;
+  }
+  .player-row .pname{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .status-select{
+    font-family:inherit; font-size:11px; padding:4px 6px; border-radius:6px; border:1px solid var(--paper-line);
+    background:var(--card);
+  }
+  .status-select.baja{background:var(--red); color:#fff; border-color:var(--red);}
+  .status-select.duda{background:var(--gold); color:#fff; border-color:var(--gold);}
+  .add-player-row{display:flex; gap:6px; margin-top:8px;}
+  .add-player-row input{flex:1;}
+
+  .qual-adj{margin-top:12px; padding-top:12px; border-top:1px dashed var(--paper-line);}
+  .qual-adj label.field{margin-bottom:6px;}
+  .qual-adj input[type=range]{width:100%;}
+  .qual-adj .range-labels{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); font-family:'Space Mono',monospace;}
+
+  /* --- Columna final --- */
+  .column-list{list-style:none; margin:0; padding:0;}
+  .column-list li{
+    display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--paper-line);
+    font-size:14px;
+  }
+  .column-list .n{font-family:'Space Mono',monospace; color:var(--ink-soft); width:20px;}
+  .column-list .teams{flex:1;}
+  .column-list .marks{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:2px;}
+  .column-list .marks.double{color:var(--red);}
+  .disclaimer{
+    margin-top:18px; padding:14px; background:var(--card); border:1px solid var(--paper-line);
+    border-radius:10px; font-size:12px; color:var(--ink-soft); line-height:1.6;
+  }
+
+  .fab-bar{
+    position:fixed; left:0; right:0; bottom:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top, var(--paper) 70%, transparent);
+  }
+  .fab-bar .inner{max-width:640px; margin:0 auto; display:flex; gap:10px;}
+  .fab-bar button{flex:1;}
+
+  .team-card{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:10px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .team-card .head{display:flex; justify-content:space-between; align-items:center;}
+  .team-card .head b{font-size:14px;}
+  .team-card .meta{font-size:11px; color:var(--ink-soft); margin-top:2px; font-family:'Space Mono',monospace;}
+
+  dialog{
+    border:none; border-radius:14px; padding:0; max-width:420px; width:90vw;
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+  }
+  dialog::backdrop{background:rgba(27,58,44,0.35);}
+  .dialog-inner{padding:20px;}
+  .dialog-inner h3{margin-top:0;}
+  .dialog-actions{display:flex; gap:10px; margin-top:16px;}
+  .dialog-actions button{flex:1;}
+
+  .info-box{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:10px;
+    padding:12px 14px; font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;
+  }
+  .info-box b{color:var(--ink);}
+
+  h2.section-title{font-size:15px; margin:22px 0 10px; color:var(--ink);}
+  h2.section-title:first-child{margin-top:0;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="row">
+    <h1>⚽ Quiniela</h1>
+    <span class="jornada-tag mono" id="jornadaTag">—</span>
+  </div>
+  <nav class="tabs">
+    <button data-tab="jornada" class="active">Jornada</button>
+    <button data-tab="columna">Columna</button>
+    <button data-tab="equipos">Equipos</button>
+    <button data-tab="historial">Historial</button>
+  </nav>
+</header>
+
+<main id="app"></main>
+
+<dialog id="teamDialog">
+  <div class="dialog-inner">
+    <h3>Nuevo equipo</h3>
+    <div class="field-group">
+      <label class="field">Nombre</label>
+      <input type="text" id="newTeamName" placeholder="Ej: Real Sociedad">
+    </div>
+    <div class="field-group">
+      <label class="field">Liga</label>
+      <select id="newTeamLeague">
+        <option value="primera">Primera División</option>
+        <option value="segunda">Segunda División</option>
+        <option value="liga_f">Liga F</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field">Elo inicial (1500 = nivel medio de su liga)</label>
+      <input type="number" id="newTeamElo" value="1500">
+    </div>
+    <div class="dialog-actions">
+      <button class="ghost" id="cancelTeamDialog">Cancelar</button>
+      <button class="primary" id="saveTeamDialog">Guardar</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="importDialog">
+  <div class="dialog-inner">
+    <h3>Importar próxima jornada</h3>
+    <div id="importList" style="max-height:50vh; overflow-y:auto; margin:12px 0;"></div>
+    <div class="dialog-actions">
+      <button class="ghost" id="cancelImportDialog">Cancelar</button>
+      <button class="primary" id="confirmImportDialog">Importar seleccionados</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="matchDialog">
+  <div class="dialog-inner">
+    <h3>Añadir partido</h3>
+    <div class="field-group">
+      <label class="field">Liga</label>
+      <select id="matchLeague"></select>
+    </div>
+    <div class="field-group">
+      <label class="field">Equipo local</label>
+      <select id="matchHome"></select>
+    </div>
+    <div class="field-group">
+      <label class="field">Equipo visitante</label>
+      <select id="matchAway"></select>
+    </div>
+    <div class="dialog-actions">
+      <button class="ghost" id="cancelMatchDialog">Cancelar</button>
+      <button class="primary" id="saveMatchDialog">Añadir</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="fab-bar" id="fabBar"></div>
+
+<script>
+/* =============================================================================
+   MOTOR ELO + POISSON (puerto directo del modelo Python quiniela_model.py)
+   ========================================================================== */
+
+const LEAGUE_CONFIG = {
+  primera: { name:'Primera División', avgGoalsHome:1.45, avgGoalsAway:1.15, homeAdvElo:65, kFactor:22, drawBase:0.24 },
+  segunda: { name:'Segunda División', avgGoalsHome:1.30, avgGoalsAway:1.05, homeAdvElo:55, kFactor:24, drawBase:0.27 },
+  liga_f:  { name:'Liga F', avgGoalsHome:1.55, avgGoalsAway:1.05, homeAdvElo:50, kFactor:26, drawBase:0.20, lowConfidence:true },
+};
+
+function poissonPmf(k, lambda){
+  return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
+}
+const _factCache = [1];
+function factorial(n){
+  if(_factCache[n] !== undefined) return _factCache[n];
+  let r = _factCache[_factCache.length-1] * (_factCache.length);
+  for(let i=_factCache.length;i<=n;i++){ r = (_factCache[i-1]||1) * i; _factCache[i] = r; }
+  return _factCache[n];
+}
+
+function formModifier(recentResults){
+  if(!recentResults || recentResults.length===0) return 1.0;
+  const n = recentResults.length;
+  const weights = recentResults.map((_,i)=> 0.5 + (1.0)*(i/(n-1||1)));
+  const points = {W:1, D:0, L:-1};
+  let score = 0, wsum = 0;
+  recentResults.forEach((r,i)=>{ score += points[r]*weights[i]; wsum += weights[i]; });
+  const norm = wsum ? score/wsum : 0;
+  return 1.0 + norm*0.05;
+}
+
+function eloWinProb(home, away, cfg){
+  const homeEff = home.elo * formModifier(home.recent) + cfg.homeAdvElo;
+  const awayEff = away.elo * formModifier(away.recent);
+  const diff = homeEff - awayEff;
+  return 1/(1+Math.pow(10, -diff/400));
+}
+
+function absenceAttackPenalty(abs){
+  return Math.max(0.70, 1.0 - 0.06*abs.attackersOut - 0.02*abs.totalOut);
+}
+function absenceDefensePenalty(abs){
+  return Math.max(0.65, 1.0 - 0.07*abs.defendersOut - 0.02*abs.totalOut);
+}
+
+function expectedGoals(home, away, cfg, homeAbs, awayAbs, qHome, qAway){
+  const lamHome = cfg.avgGoalsHome * home.attack * away.defense
+    * absenceAttackPenalty(homeAbs) * absenceDefensePenalty(awayAbs) * (1+qHome);
+  const lamAway = cfg.avgGoalsAway * away.attack * home.defense
+    * absenceAttackPenalty(awayAbs) * absenceDefensePenalty(homeAbs) * (1+qAway);
+  return [Math.max(0.1,lamHome), Math.max(0.1,lamAway)];
+}
+
+function scoreMatrix(lamHome, lamAway, maxGoals=6){
+  const hp=[], ap=[];
+  for(let i=0;i<=maxGoals;i++){ hp.push(poissonPmf(i,lamHome)); ap.push(poissonPmf(i,lamAway)); }
+  const m = [];
+  for(let i=0;i<=maxGoals;i++){ const row=[]; for(let j=0;j<=maxGoals;j++){ row.push(hp[i]*ap[j]); } m.push(row); }
+  return m;
+}
+function outcomeProbsFromMatrix(m){
+  let pH=0,pD=0,pA=0;
+  for(let i=0;i<m.length;i++) for(let j=0;j<m[i].length;j++){
+    if(i>j) pH+=m[i][j]; else if(i===j) pD+=m[i][j]; else pA+=m[i][j];
+  }
+  return [pH,pD,pA];
+}
+function mostLikelyScore(m){
+  let best=[0,0], bv=-1;
+  for(let i=0;i<m.length;i++) for(let j=0;j<m[i].length;j++){ if(m[i][j]>bv){bv=m[i][j]; best=[i,j];} }
+  return best;
+}
+
+function predictMatch(home, away, league, homeAbs, awayAbs, qHome=0, qAway=0, eloWeight=0.45){
+  const cfg = LEAGUE_CONFIG[league];
+  qHome = Math.max(-0.10, Math.min(0.10, qHome));
+  qAway = Math.max(-0.10, Math.min(0.10, qAway));
+
+  const eloRaw = eloWinProb(home, away, cfg);
+  const eloPH = eloRaw*(1-cfg.drawBase);
+  const eloPA = (1-eloRaw)*(1-cfg.drawBase);
+  const eloPD = cfg.drawBase;
+
+  const [lamH,lamA] = expectedGoals(home, away, cfg, homeAbs, awayAbs, qHome, qAway);
+  const m = scoreMatrix(lamH, lamA);
+  const [poisPH, poisPD, poisPA] = outcomeProbsFromMatrix(m);
+  const score = mostLikelyScore(m);
+
+  const w = eloWeight;
+  let pH = w*eloPH + (1-w)*poisPH;
+  let pD = w*eloPD + (1-w)*poisPD;
+  let pA = w*eloPA + (1-w)*poisPA;
+  const tot = pH+pD+pA;
+  pH/=tot; pD/=tot; pA/=tot;
+
+  const probs = [['1',pH],['X',pD],['2',pA]].sort((a,b)=>b[1]-a[1]);
+  const [sign, conf] = probs[0];
+  const [sign2, conf2] = probs[1];
+  const recommendDouble = (conf-conf2) < 0.08;
+  const doubleSigns = recommendDouble ? [sign,sign2].sort().join('') : null;
+
+  const notes = [];
+  if(cfg.lowConfidence) notes.push('Liga F: histórico público más limitado — usar con más margen de error.');
+  if(homeAbs.totalOut>=3) notes.push(`${home.name} con ${homeAbs.totalOut} bajas de titulares: alta incertidumbre.`);
+  if(awayAbs.totalOut>=3) notes.push(`${away.name} con ${awayAbs.totalOut} bajas de titulares: alta incertidumbre.`);
+
+  return { pH, pD, pA, score, sign, confidence:conf, recommendDouble, doubleSigns, notes };
+}
+
+function eloUpdate(home, away, league, result){
+  // result: 'H' | 'D' | 'A'
+  const cfg = LEAGUE_CONFIG[league];
+  const pHome = eloWinProb(home, away, cfg);
+  const actual = {H:1.0, D:0.5, A:0.0}[result];
+  const delta = cfg.kFactor * (actual - pHome);
+  home.elo += delta;
+  away.elo -= delta;
+  home.recent = (home.recent||[]).concat([{H:'W',D:'D',A:'L'}[result]]).slice(-8);
+  away.recent = (away.recent||[]).concat([{H:'L',D:'D',A:'W'}[result]]).slice(-8);
+}
+
+/* =============================================================================
+   ALMACENAMIENTO (localStorage)
+   ========================================================================== */
+
+const DB_KEY = 'quiniela_db_v1';
+function loadDB(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(raw) return JSON.parse(raw);
+  return { teams:{}, jornada:null, history:[] };
+}
+function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+let db = loadDB();
+
+function newId(){ return 't_' + Math.random().toString(36).slice(2,10); }
+
+function ensureTeam(id){ return db.teams[id]; }
+
+function defaultAbsences(){ return { attackersOut:0, defendersOut:0, totalOut:0, marks:{} }; }
+
+/* =============================================================================
+   RENDER
+   ========================================================================== */
+
+const app = document.getElementById('app');
+const fabBar = document.getElementById('fabBar');
+let activeTab = 'jornada';
+
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    render();
+  });
+});
+
+function render(){
+  document.getElementById('jornadaTag').textContent = db.jornada
+    ? `Jornada · ${db.jornada.matches.length} partidos`
+    : 'sin jornada activa';
+
+  if(activeTab==='jornada') renderJornada();
+  else if(activeTab==='columna') renderColumna();
+  else if(activeTab==='equipos') renderEquipos();
+  else if(activeTab==='historial') renderHistorial();
+}
+
+/* ---- Tab: Jornada ---- */
+function renderJornada(){
+  fabBar.innerHTML = '';
+  if(!db.jornada){
+    app.innerHTML = `
+      <div class="empty">
+        <div class="big">Todavía no hay una jornada abierta.<br>Crea una para empezar a añadir los 15 partidos.</div>
+        <button class="primary" id="btnNewJornada">Nueva jornada</button>
+      </div>`;
+    document.getElementById('btnNewJornada').onclick = ()=>{
+      const label = prompt('Nombre de la jornada (ej: "Jornada 4 — 20-21 sep")');
+      if(label===null) return;
+      db.jornada = { label: label || 'Jornada', matches: [] };
+      saveDB(); render();
+    };
+    return;
+  }
+
+  if(Object.keys(db.teams).length===0){
+    app.innerHTML = `<div class="empty"><div class="big">Primero añade equipos en la pestaña <b>Equipos</b> (nombre, liga y, si quieres, la plantilla).</div></div>`;
+    return;
+  }
+
+  let html = `<h2 class="section-title">${escapeHtml(db.jornada.label)}</h2>`;
+  if(db.jornada.matches.length===0){
+    html += `<div class="empty"><div class="big">Añade tu primer partido con el botón de abajo.</div></div>`;
+  } else {
+    db.jornada.matches.forEach((match, idx)=>{
+      html += renderCoupon(match, idx);
+    });
+  }
+  app.innerHTML = html;
+
+  db.jornada.matches.forEach((match, idx)=> wireCoupon(match, idx));
+
+  fabBar.innerHTML = `<div class="inner">
+    <button class="ghost" id="btnAddMatch">+ Partido</button>
+    <button class="ghost" id="btnImportJornada">↓ Importar API</button>
+    <button class="primary" id="btnCloseJornada">Cerrar jornada</button>
+  </div>`;
+  document.getElementById('btnAddMatch').onclick = openMatchDialog;
+  document.getElementById('btnImportJornada').onclick = openImportDialog;
+  document.getElementById('btnCloseJornada').onclick = ()=>{
+    if(confirm('¿Archivar esta jornada en el historial y empezar de cero? Podrás introducir los resultados reales después desde Historial, y el Elo de los equipos se actualizará automáticamente.')){
+      db.history.unshift({ label: db.jornada.label, matches: db.jornada.matches, resolved:false, date: new Date().toISOString() });
+      db.jornada = null;
+      saveDB(); render();
+    }
+  };
+}
+
+function computePrediction(match){
+  const home = ensureTeam(match.homeId);
+  const away = ensureTeam(match.awayId);
+  if(!home || !away) return null;
+  return predictMatch(home, away, match.league, match.homeAbs, match.awayAbs, match.qHome||0, match.qAway||0);
+}
+
+function renderCoupon(match, idx){
+  const home = ensureTeam(match.homeId);
+  const away = ensureTeam(match.awayId);
+  if(!home || !away) return '';
+  const pred = computePrediction(match);
+  const pct = x => Math.round(x*100);
+  return `
+  <div class="coupon" id="coupon-${idx}">
+    <div class="coupon-head" data-toggle="${idx}">
+      <div class="coupon-num mono">${String(idx+1).padStart(2,'0')}</div>
+      <div class="coupon-teams">
+        <div class="vs">${escapeHtml(home.name)} — ${escapeHtml(away.name)}</div>
+        <div class="liga">${LEAGUE_CONFIG[match.league].name}</div>
+      </div>
+      <div class="coupon-caret">▾</div>
+    </div>
+    <div class="prob-bar">
+      <span class="h" style="width:${pct(pred.pH)}%"></span>
+      <span class="d" style="width:${pct(pred.pD)}%"></span>
+      <span class="a" style="width:${pct(pred.pA)}%"></span>
+    </div>
+    <div class="prob-labels">
+      <span>1 · ${pct(pred.pH)}%</span><span>X · ${pct(pred.pD)}%</span><span>2 · ${pct(pred.pA)}%</span>
+    </div>
+    <div class="sign-row">
+      <span class="sign-pill">${pred.sign}</span>
+      <span>Marcador probable ${pred.score[0]}-${pred.score[1]}</span>
+      ${pred.recommendDouble ? `<span class="double">· doble ${pred.doubleSigns} recomendado</span>` : ''}
+    </div>
+    ${pred.notes.length ? `<div class="notes">${pred.notes.map(n=>'· '+escapeHtml(n)).join('<br>')}</div>` : ''}
+    <div class="players-panel">
+      <div class="players-cols">
+        <div>
+          <h4>${escapeHtml(home.name)}</h4>
+          <div id="players-home-${idx}"></div>
+        </div>
+        <div>
+          <h4>${escapeHtml(away.name)}</h4>
+          <div id="players-away-${idx}"></div>
+        </div>
+      </div>
+      <div class="qual-adj">
+        <label class="field">Ajuste cualitativo local (derbi, motivación, etc. — opcional, máx ±10%)</label>
+        <input type="range" min="-10" max="10" value="${Math.round((match.qHome||0)*100)}" data-qual="home" data-idx="${idx}">
+        <div class="range-labels"><span>-10%</span><span>0</span><span>+10%</span></div>
+        <label class="field" style="margin-top:10px;">Ajuste cualitativo visitante</label>
+        <input type="range" min="-10" max="10" value="${Math.round((match.qAway||0)*100)}" data-qual="away" data-idx="${idx}">
+        <div class="range-labels"><span>-10%</span><span>0</span><span>+10%</span></div>
+      </div>
+      <button class="link" data-remove="${idx}" style="margin-top:10px;">Eliminar partido</button>
+    </div>
+  </div>`;
+}
+
+function playerRowHtml(team, playerId, side, idx){
+  const p = team.players.find(pl=>pl.id===playerId);
+  const status = (db.jornada.matches[idx][side+'Abs'].marks[playerId]) || 'ok';
+  return `
+    <div class="player-row">
+      <span class="pname">${escapeHtml(p.name)} <span style="color:var(--ink-soft); font-size:11px;">${p.pos||''}</span></span>
+      <select class="status-select ${status==='baja'?'baja':status==='duda'?'duda':''}" data-player="${playerId}" data-side="${side}" data-idx="${idx}">
+        <option value="ok" ${status==='ok'?'selected':''}>Titular</option>
+        <option value="duda" ${status==='duda'?'selected':''}>Duda</option>
+        <option value="baja" ${status==='baja'?'selected':''}>Lesión/Sanción</option>
+      </select>
+    </div>`;
+}
+
+function wireCoupon(match, idx){
+  const couponEl = document.getElementById('coupon-'+idx);
+  couponEl.querySelector('[data-toggle]').addEventListener('click', ()=>{
+    const willOpen = !couponEl.classList.contains('open');
+    couponEl.classList.toggle('open');
+    if(willOpen) renderPlayerPanels(match, idx);
+  });
+  couponEl.querySelector('[data-remove]').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    db.jornada.matches.splice(idx,1);
+    saveDB(); render();
+  });
+  couponEl.querySelectorAll('[data-qual]').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      const side = e.target.dataset.qual;
+      const val = parseInt(e.target.value,10)/100;
+      if(side==='home') match.qHome = val; else match.qAway = val;
+      saveDB();
+      refreshCouponNumbers(match, idx);
+    });
+  });
+}
+
+function renderPlayerPanels(match, idx){
+  const home = ensureTeam(match.homeId), away = ensureTeam(match.awayId);
+  const homeEl = document.getElementById('players-home-'+idx);
+  const awayEl = document.getElementById('players-away-'+idx);
+  const homeHtml = (home.players||[]).map(p=>playerRowHtml(home,p.id,'home',idx)).join('')
+    || '<div style="font-size:12px;color:var(--ink-soft);">Sin plantilla añadida (edítala en Equipos)</div>';
+  const awayHtml = (away.players||[]).map(p=>playerRowHtml(away,p.id,'away',idx)).join('')
+    || '<div style="font-size:12px;color:var(--ink-soft);">Sin plantilla añadida (edítala en Equipos)</div>';
+  homeEl.innerHTML = homeHtml;
+  awayEl.innerHTML = awayHtml;
+
+  [...homeEl.querySelectorAll('select'), ...awayEl.querySelectorAll('select')].forEach(sel=>{
+    sel.addEventListener('change', (e)=>{
+      const side = e.target.dataset.side, playerId = e.target.dataset.player;
+      const status = e.target.value;
+      const team = side==='home'?home:away;
+      const player = team.players.find(p=>p.id===playerId);
+      const absKey = side+'Abs';
+      match[absKey].marks[playerId] = status;
+      recomputeAbsences(match, absKey, team);
+      saveDB();
+      sel.className = 'status-select ' + (status==='baja'?'baja':status==='duda'?'duda':'');
+      refreshCouponNumbers(match, idx);
+    });
+  });
+}
+
+function recomputeAbsences(match, absKey, team){
+  const marks = match[absKey].marks;
+  let attackersOut=0, defendersOut=0, totalOut=0;
+  Object.entries(marks).forEach(([pid, status])=>{
+    if(status==='baja'){
+      totalOut++;
+      const p = team.players.find(pl=>pl.id===pid);
+      const pos = (p && p.pos || '').toLowerCase();
+      if(pos.includes('del') || pos.includes('centro')) attackersOut++;
+      if(pos.includes('def') || pos.includes('porter')) defendersOut++;
+    }
+  });
+  match[absKey].attackersOut = attackersOut;
+  match[absKey].defendersOut = defendersOut;
+  match[absKey].totalOut = totalOut;
+}
+
+function refreshCouponNumbers(match, idx){
+  const wasOpen = document.getElementById('coupon-'+idx).classList.contains('open');
+  const html = renderCoupon(match, idx);
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+  const newEl = wrapper.firstElementChild;
+  document.getElementById('coupon-'+idx).replaceWith(newEl);
+  if(wasOpen){ newEl.classList.add('open'); }
+  wireCoupon(match, idx);
+  if(wasOpen) renderPlayerPanels(match, idx);
+}
+
+/* ---- Diálogo: añadir partido ---- */
+function openMatchDialog(){
+  const dlg = document.getElementById('matchDialog');
+  const leagueSel = document.getElementById('matchLeague');
+  const homeSel = document.getElementById('matchHome');
+  const awaySel = document.getElementById('matchAway');
+  leagueSel.innerHTML = Object.entries(LEAGUE_CONFIG).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
+  const fillTeams = ()=>{
+    const league = leagueSel.value;
+    const teams = Object.entries(db.teams).filter(([id,t])=>t.league===league);
+    const opts = teams.map(([id,t])=>`<option value="${id}">${escapeHtml(t.name)}</option>`).join('');
+    homeSel.innerHTML = opts; awaySel.innerHTML = opts;
+  };
+  leagueSel.onchange = fillTeams;
+  fillTeams();
+  dlg.showModal();
+  document.getElementById('cancelMatchDialog').onclick = ()=>dlg.close();
+  document.getElementById('saveMatchDialog').onclick = ()=>{
+    if(homeSel.value===awaySel.value){ alert('Elige dos equipos distintos.'); return; }
+    db.jornada.matches.push({
+      league: leagueSel.value, homeId: homeSel.value, awayId: awaySel.value,
+      homeAbs: defaultAbsences(), awayAbs: defaultAbsences(), qHome:0, qAway:0
+    });
+    saveDB(); dlg.close(); render();
+  };
+}
+
+/* ---- Importar próxima jornada desde la API ---- */
+function normTeamName(s){
+  // OJO: no se eliminan palabras como "atlético" o "athletic" — son parte
+  // distintiva del nombre (Real Madrid != Atlético Madrid).
+  return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+    .replace(/\b(cf|sd|cd|ud|rc|rcd|fc|club|deportivo|real|de)\b/g,'')
+    .replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+function findTeamByName(apiName, league){
+  const target = normTeamName(apiName);
+  const match = Object.entries(db.teams).find(([id,t]) => t.league===league && normTeamName(t.name)===target);
+  return match ? match[0] : null;
+}
+
+function ensureTeamByName(apiName, league, createdLog){
+  let id = findTeamByName(apiName, league);
+  if(id) return id;
+  id = newId();
+  db.teams[id] = { name: apiName, league, elo:1500, attack:1.0, defense:1.0, recent:[], players:[] };
+  if(createdLog) createdLog.push(apiName);
+  return id;
+}
+
+async function openImportDialog(){
+  const dlg = document.getElementById('importDialog');
+  const listEl = document.getElementById('importList');
+  listEl.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);">Cargando data/proximos.json…</div>';
+  dlg.showModal();
+  document.getElementById('cancelImportDialog').onclick = ()=>dlg.close();
+
+  let items;
+  try {
+    const res = await fetch('./data/proximos.json', { cache:'no-store' });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    items = await res.json();
+  } catch(err){
+    listEl.innerHTML = `<div style="font-size:13px;color:var(--red);">
+      No se pudo leer data/proximos.json (${escapeHtml(err.message)}).<br><br>
+      Esto es normal si aún no has configurado la GitHub Action o todavía no se ha ejecutado.
+      Revisa la pestaña "Actions" del repo, o añade el partido manualmente con "+ Partido".
+    </div>`;
+    return;
+  }
+
+  if(!items || items.length===0){
+    listEl.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);">Todavía no hay próximos partidos guardados. Lanza la Action manualmente desde GitHub (pestaña Actions → Actualizar datos de Quiniela → Run workflow) y vuelve a intentarlo.</div>';
+    return;
+  }
+
+  const already = new Set((db.jornada.matches||[]).map(m=>m.apiId).filter(Boolean));
+  const rows = items.filter(it=>!already.has(it.id)).map((it,i)=>`
+    <label style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--paper-line); font-size:13px;">
+      <input type="checkbox" data-import-idx="${i}" ${i<15?'checked':''}>
+      <span style="flex:1;">${escapeHtml(it.home)} - ${escapeHtml(it.away)}</span>
+      <span class="mono" style="font-size:11px;color:var(--ink-soft);">${LEAGUE_CONFIG[it.league] ? LEAGUE_CONFIG[it.league].name.split(' ')[0] : it.league}</span>
+    </label>`).join('');
+  listEl.innerHTML = rows || '<div style="font-size:13px;color:var(--ink-soft);">Todos los próximos partidos ya están en la jornada actual.</div>';
+
+  document.getElementById('confirmImportDialog').onclick = ()=>{
+    const createdTeams = [];
+    const filtered = items.filter(it=>!already.has(it.id));
+    listEl.querySelectorAll('[data-import-idx]:checked').forEach(cb=>{
+      const it = filtered[+cb.dataset.importIdx];
+      if(!it || !LEAGUE_CONFIG[it.league]) return;
+      const homeId = ensureTeamByName(it.home, it.league, createdTeams);
+      const awayId = ensureTeamByName(it.away, it.league, createdTeams);
+      db.jornada.matches.push({
+        league: it.league, homeId, awayId, apiId: it.id,
+        homeAbs: defaultAbsences(), awayAbs: defaultAbsences(), qHome:0, qAway:0
+      });
+    });
+    saveDB();
+    dlg.close();
+    render();
+    if(createdTeams.length){
+      alert('Equipos añadidos automáticamente desde la API (Elo inicial 1500 — ajústalo en la pestaña Equipos si lo conoces):\n' + createdTeams.join(', '));
+    }
+  };
+}
+
+/* ---- Sincronizar resultados reales desde la API (actualiza Elo solo) ---- */
+async function syncResultadosDesdeAPI(){
+  let items;
+  try {
+    const res = await fetch('./data/resultados.json', { cache:'no-store' });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    items = await res.json();
+  } catch(err){
+    alert('No se pudo leer data/resultados.json: ' + err.message + '\n\n¿Está ya publicada la Action y ha corrido al menos una vez?');
+    return;
+  }
+
+  db.appliedApiResults = db.appliedApiResults || [];
+  const appliedSet = new Set(db.appliedApiResults);
+  const createdTeams = [];
+  let applied = 0;
+
+  items.forEach(r=>{
+    if(appliedSet.has(r.id) || !r.resultado || !LEAGUE_CONFIG[r.league]) return;
+    const homeId = ensureTeamByName(r.home, r.league, createdTeams);
+    const awayId = ensureTeamByName(r.away, r.league, createdTeams);
+    eloUpdate(db.teams[homeId], db.teams[awayId], r.league, r.resultado);
+    appliedSet.add(r.id);
+    applied++;
+  });
+
+  db.appliedApiResults = Array.from(appliedSet);
+  saveDB();
+  render();
+  let msg = `Sincronización completa: ${applied} resultado(s) nuevo(s) aplicado(s) al Elo.`;
+  if(createdTeams.length) msg += `\n\nEquipos añadidos automáticamente (Elo inicial 1500): ${createdTeams.join(', ')}`;
+  if(applied===0 && createdTeams.length===0) msg = 'No había resultados nuevos por aplicar — ya estás al día.';
+  alert(msg);
+}
+
+/* ---- Tab: Columna ---- */
+function renderColumna(){
+  fabBar.innerHTML = '';
+  if(!db.jornada || db.jornada.matches.length===0){
+    app.innerHTML = `<div class="empty"><div class="big">Añade partidos en la pestaña Jornada para generar la columna.</div></div>`;
+    return;
+  }
+  const predictions = db.jornada.matches.map(m=>({m, pred:computePrediction(m)})).filter(x=>x.pred);
+  const margins = predictions.map((x,i)=>{
+    const probs=[x.pred.pH,x.pred.pD,x.pred.pA].sort((a,b)=>b-a);
+    return { margin: probs[0]-probs[1], i };
+  }).sort((a,b)=>a.margin-b.margin);
+
+  const maxDoubles = 3;
+  const doublesIdx = new Set(margins.slice(0,maxDoubles).filter(x=>predictions[x.i].pred.recommendDouble).map(x=>x.i));
+
+  let html = `<h2 class="section-title">Columna — ${escapeHtml(db.jornada.label)}</h2><ul class="column-list">`;
+  predictions.forEach((x,i)=>{
+    const home = ensureTeam(x.m.homeId), away = ensureTeam(x.m.awayId);
+    const isDouble = doublesIdx.has(i);
+    const marks = isDouble ? x.pred.doubleSigns : x.pred.sign;
+    html += `<li>
+      <span class="n mono">${String(i+1).padStart(2,'0')}</span>
+      <span class="teams">${escapeHtml(home.name)} - ${escapeHtml(away.name)}</span>
+      <span class="marks ${isDouble?'double':''} mono">${marks}</span>
+    </li>`;
+  });
+  html += `</ul>`;
+
+  const avgConf = predictions.reduce((s,x)=>s+x.pred.confidence,0)/predictions.length;
+  html += `<div class="disclaimer">
+    Confianza media por signo: <b>${Math.round(avgConf*100)}%</b>. Esto <b>no</b> es la probabilidad de acertar los ${predictions.length} juntos:
+    con partidos independientes, incluso una confianza media alta da una probabilidad de pleno exacto muy baja sin dobles.
+    Se han marcado ${doublesIdx.size} dobles en los partidos más reñidos para gestionar ese riesgo — no elimina la incertidumbre, la reparte.
+  </div>`;
+  app.innerHTML = html;
+}
+
+/* ---- Tab: Equipos ---- */
+function renderEquipos(){
+  const byLeague = {primera:[], segunda:[], liga_f:[]};
+  Object.entries(db.teams).forEach(([id,t])=> byLeague[t.league].push([id,t]));
+
+  let html = '';
+  Object.entries(LEAGUE_CONFIG).forEach(([key,cfg])=>{
+    html += `<h2 class="section-title">${cfg.name}</h2>`;
+    if(byLeague[key].length===0){
+      html += `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:10px;">Sin equipos todavía.</div>`;
+    }
+    byLeague[key].forEach(([id,t])=>{
+      html += `<div class="team-card">
+        <div class="head">
+          <b>${escapeHtml(t.name)}</b>
+          <div>
+            <button class="small" data-edit-players="${id}">Plantilla (${(t.players||[]).length})</button>
+            <button class="small" data-del-team="${id}" style="color:var(--red);">✕</button>
+          </div>
+        </div>
+        <div class="meta">Elo ${Math.round(t.elo)} · forma: ${(t.recent||[]).join('') || '—'}</div>
+        <div id="roster-${id}"></div>
+      </div>`;
+    });
+  });
+  app.innerHTML = html;
+
+  document.querySelectorAll('[data-del-team]').forEach(btn=>btn.onclick=()=>{
+    if(confirm('¿Eliminar este equipo y su plantilla?')){
+      delete db.teams[btn.dataset.delTeam];
+      saveDB(); render();
+    }
+  });
+  document.querySelectorAll('[data-edit-players]').forEach(btn=>btn.onclick=()=>{
+    const id = btn.dataset.editPlayers;
+    const el = document.getElementById('roster-'+id);
+    el.style.display = el.style.display==='block' ? 'none' : 'block';
+    if(el.style.display==='block') renderRoster(id, el);
+  });
+
+  fabBar.innerHTML = `<div class="inner"><button class="primary" id="btnAddTeam" style="flex:1;">+ Añadir equipo</button></div>`;
+  document.getElementById('btnAddTeam').onclick = openTeamDialog;
+}
+
+function renderRoster(teamId, container){
+  const t = db.teams[teamId];
+  const rows = (t.players||[]).map(p=>`
+    <div class="player-row">
+      <span class="pname">${escapeHtml(p.name)} <span style="color:var(--ink-soft);font-size:11px;">${p.pos||''}</span></span>
+      <button class="link" data-del-player="${p.id}">quitar</button>
+    </div>`).join('');
+  container.innerHTML = `
+    <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--paper-line);">
+      ${rows || '<div style="font-size:12px;color:var(--ink-soft);">Sin jugadores añadidos.</div>'}
+      <div class="add-player-row">
+        <input type="text" placeholder="Nombre del jugador" id="newPlayerName-${teamId}">
+        <select id="newPlayerPos-${teamId}" style="max-width:130px;">
+          <option value="Portero">Portero</option>
+          <option value="Defensa">Defensa</option>
+          <option value="Centrocampista">Centro</option>
+          <option value="Delantero">Delantero</option>
+        </select>
+        <button class="small" id="addPlayerBtn-${teamId}">Añadir</button>
+      </div>
+    </div>`;
+  container.querySelectorAll('[data-del-player]').forEach(btn=>btn.onclick=()=>{
+    t.players = t.players.filter(p=>p.id!==btn.dataset.delPlayer);
+    saveDB(); renderRoster(teamId, container);
+  });
+  document.getElementById('addPlayerBtn-'+teamId).onclick = ()=>{
+    const nameInp = document.getElementById('newPlayerName-'+teamId);
+    const posSel = document.getElementById('newPlayerPos-'+teamId);
+    if(!nameInp.value.trim()) return;
+    t.players = t.players || [];
+    t.players.push({ id:newId(), name:nameInp.value.trim(), pos:posSel.value });
+    saveDB(); renderRoster(teamId, container);
+  };
+}
+
+function openTeamDialog(){
+  const dlg = document.getElementById('teamDialog');
+  document.getElementById('newTeamName').value='';
+  document.getElementById('newTeamElo').value='1500';
+  dlg.showModal();
+  document.getElementById('cancelTeamDialog').onclick = ()=>dlg.close();
+  document.getElementById('saveTeamDialog').onclick = ()=>{
+    const name = document.getElementById('newTeamName').value.trim();
+    if(!name) return;
+    const id = newId();
+    db.teams[id] = {
+      name, league: document.getElementById('newTeamLeague').value,
+      elo: parseFloat(document.getElementById('newTeamElo').value)||1500,
+      attack:1.0, defense:1.0, recent:[], players:[]
+    };
+    saveDB(); dlg.close(); render();
+  };
+}
+
+/* ---- Tab: Historial ---- */
+function renderHistorial(){
+  fabBar.innerHTML = '';
+  if(db.history.length===0){
+    app.innerHTML = `<div class="empty"><div class="big">Aún no has cerrado ninguna jornada.</div></div>
+      <div style="text-align:center;"><button class="primary" id="btnSyncAPI">↓ Sincronizar API</button></div>`;
+    document.getElementById('btnSyncAPI').onclick = syncResultadosDesdeAPI;
+    return;
+  }
+  let html = `<div class="info-box"><b>Sincronización automática:</b> si has configurado la GitHub Action con tu clave de API-Football, pulsa "Sincronizar API" para aplicar automáticamente todos los resultados reales nuevos al Elo de los equipos. Si prefieres marcarlos a mano (o para jornadas antiguas, sin conexión a la Action), usa los botones 1/X/2 de cada partido debajo.</div>
+  <div style="margin-bottom:18px;"><button class="primary" id="btnSyncAPI">↓ Sincronizar API</button></div>`;
+  db.history.forEach((h, hIdx)=>{
+    html += `<h2 class="section-title">${escapeHtml(h.label)} ${h.resolved?'✓':''}</h2>`;
+    h.matches.forEach((m, mIdx)=>{
+      const home = ensureTeam(m.homeId), away = ensureTeam(m.awayId);
+      if(!home||!away) return;
+      const result = m.realResult;
+      html += `<div class="team-card">
+        <div class="head"><b>${escapeHtml(home.name)} - ${escapeHtml(away.name)}</b></div>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button class="small ${result==='H'?'baja':''}" data-h="${hIdx}" data-m="${mIdx}" data-r="H">1</button>
+          <button class="small ${result==='D'?'baja':''}" data-h="${hIdx}" data-m="${mIdx}" data-r="D">X</button>
+          <button class="small ${result==='A'?'baja':''}" data-h="${hIdx}" data-m="${mIdx}" data-r="A">2</button>
+        </div>
+      </div>`;
+    });
+  });
+  app.innerHTML = html;
+  document.getElementById('btnSyncAPI').onclick = syncResultadosDesdeAPI;
+  document.querySelectorAll('[data-r]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const hIdx = +btn.dataset.h, mIdx = +btn.dataset.m, r = btn.dataset.r;
+      const h = db.history[hIdx], m = h.matches[mIdx];
+      if(m.realResult === r) return; // ya aplicado
+      const home = ensureTeam(m.homeId), away = ensureTeam(m.awayId);
+      if(m.realResult){ alert('Este resultado ya se aplicó al Elo. Para corregirlo, hazlo manualmente en la pestaña Equipos.'); return; }
+      eloUpdate(home, away, m.league, r);
+      m.realResult = r;
+      h.resolved = h.matches.every(mm=>mm.realResult);
+      saveDB(); render();
+    };
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+render();
+</script>
+</body>
+</html>
