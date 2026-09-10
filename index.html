@@ -759,17 +759,43 @@ async function openImportDialog(){
   }
 
   const already = new Set((db.jornada.matches||[]).map(m=>m.apiId).filter(Boolean));
-  const rows = items.filter(it=>!already.has(it.id)).map((it,i)=>`
-    <label style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--paper-line); font-size:13px;">
-      <input type="checkbox" data-import-idx="${i}" ${i<15?'checked':''}>
-      <span style="flex:1;">${escapeHtml(it.home)} - ${escapeHtml(it.away)}</span>
-      <span class="mono" style="font-size:11px;color:var(--ink-soft);">${LEAGUE_CONFIG[it.league] ? LEAGUE_CONFIG[it.league].name.split(' ')[0] : it.league}</span>
-    </label>`).join('');
-  listEl.innerHTML = rows || '<div style="font-size:13px;color:var(--ink-soft);">Todos los próximos partidos ya están en la jornada actual.</div>';
+  const disponibles = items.filter(it=>!already.has(it.id));
+
+  // Agrupar por jornada real (it.round, tal cual la da la API) para que
+  // nunca tengas que adivinar a qué jornada pertenece cada partido — y
+  // premarcar solo los de la jornada más próxima, no "los primeros 15 por
+  // fecha" a ciegas (eso fue lo que mezcló jornadas la vez anterior).
+  const grupos = new Map();
+  disponibles.forEach(it => {
+    const key = it.round || 'Sin jornada';
+    if(!grupos.has(key)) grupos.set(key, []);
+    grupos.get(key).push(it);
+  });
+  const roundsOrdenados = [...grupos.keys()].sort((a,b)=>{
+    const da = grupos.get(a)[0].date, db_ = grupos.get(b)[0].date;
+    return new Date(da) - new Date(db_);
+  });
+  const primeraJornada = roundsOrdenados[0];
+
+  let idx = 0;
+  let html = '';
+  roundsOrdenados.forEach(round => {
+    html += `<div style="font-weight:700; font-size:12px; margin:12px 0 4px; color:var(--ink-soft);">${escapeHtml(round)}</div>`;
+    grupos.get(round).forEach(it => {
+      const checked = round === primeraJornada;
+      html += `<label style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--paper-line); font-size:13px;">
+        <input type="checkbox" data-import-idx="${idx}" ${checked?'checked':''}>
+        <span style="flex:1;">${escapeHtml(it.home)} - ${escapeHtml(it.away)}</span>
+        <span class="mono" style="font-size:11px;color:var(--ink-soft);">${LEAGUE_CONFIG[it.league] ? LEAGUE_CONFIG[it.league].name.split(' ')[0] : it.league}</span>
+      </label>`;
+      idx++;
+    });
+  });
+  listEl.innerHTML = html || '<div style="font-size:13px;color:var(--ink-soft);">Todos los próximos partidos ya están en la jornada actual.</div>';
 
   document.getElementById('confirmImportDialog').onclick = ()=>{
     const createdTeams = [];
-    const filtered = items.filter(it=>!already.has(it.id));
+    const filtered = disponibles;
     listEl.querySelectorAll('[data-import-idx]:checked').forEach(cb=>{
       const it = filtered[+cb.dataset.importIdx];
       if(!it || !LEAGUE_CONFIG[it.league]) return;
