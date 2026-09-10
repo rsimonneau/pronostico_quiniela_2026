@@ -863,12 +863,25 @@ function renderEquipos(){
             <button class="small" data-del-team="${id}" style="color:var(--red);">✕</button>
           </div>
         </div>
-        <div class="meta">Elo ${Math.round(t.elo)} · forma: ${(t.recent||[]).join('') || '—'}</div>
+        <div class="meta">Elo ${Math.round(t.elo)} · forma: ${(t.recent||[]).join('') || '—'}
+          <button class="link" data-edit-elo="${id}" style="margin-left:8px;">editar Elo</button>
+        </div>
         <div id="roster-${id}"></div>
       </div>`;
     });
   });
   app.innerHTML = html;
+
+  document.querySelectorAll('[data-edit-elo]').forEach(btn=>btn.onclick=()=>{
+    const id = btn.dataset.editElo;
+    const t = db.teams[id];
+    const input = prompt(`Nuevo Elo para ${t.name} (actual: ${Math.round(t.elo)}). Guía: 1750-1850 equipos top, 1450-1550 mitad de tabla, 1300-1400 recién ascendidos o flojos.`, Math.round(t.elo));
+    if(input===null) return;
+    const val = parseFloat(input);
+    if(isNaN(val)){ alert('Introduce un número válido.'); return; }
+    t.elo = val;
+    saveDB(); render();
+  });
 
   document.querySelectorAll('[data-del-team]').forEach(btn=>btn.onclick=()=>{
     if(confirm('¿Eliminar este equipo y su plantilla?')){
