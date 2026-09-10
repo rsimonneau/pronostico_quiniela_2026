@@ -2,16 +2,20 @@
 /**
  * =============================================================================
  * Descarga resultados recientes y próximos partidos desde football-data.org
- * (https://football-data.org, plan gratuito: 10 peticiones/min, temporada
- * ACTUAL incluida) y los guarda en data/resultados.json y data/proximos.json.
+ * por RANGO DE FECHAS (no por "jornada actual") y los guarda en
+ * data/resultados.json y data/proximos.json.
  *
- * IMPORTANTE — por qué esta API y no API-Football:
- * El plan gratuito de API-Football (probado primero) solo da acceso a
- * fixtures de temporadas 2022-2024, no a la temporada en curso — inútil para
- * este caso de uso. football-data.org sí da temporada actual gratis, pero
- * a cambio solo cubre 12 ligas grandes; de España, únicamente Primera
- * División. Segunda y Liga F no tienen automatización disponible en ningún
- * plan gratuito conocido — se gestionan a mano desde la web (ya soportado).
+ * POR QUÉ POR FECHAS Y NO POR "currentMatchday":
+ * La primera versión de este script confiaba en el campo currentMatchday
+ * que football-data.org calcula automáticamente. Es un algoritmo heurístico
+ * (mira el último y el próximo partido y adivina en qué jornada estamos) y
+ * puede adelantarse o atrasarse respecto a la numeración real cuando hay
+ * partidos aplazados o reordenados — nos pasó: importó la Jornada 6 cuando
+ * la Jornada 5 real aún no se había jugado. Pedir los partidos por fecha
+ * (hoy ± 10 días, el máximo que permite el plan gratuito por consulta) evita
+ * ese problema de raíz: cada partido lleva su propio número de jornada real
+ * (m.matchday), tal cual lo da la API, sin que este script tenga que
+ * adivinar nada.
  *
  * Este script NO corre en el navegador: se ejecuta desde GitHub Actions
  * (ver .github/workflows/actualizar-datos.yml), donde el token vive como
@@ -27,6 +31,7 @@ const path = require('path');
 const TOKEN = process.env.FOOTBALL_DATA_TOKEN;
 const BASE = 'https://api.football-data.org/v4';
 const DATA_DIR = path.join(__dirname, '..', 'data');
+const MAX_DIAS_RANGO = 10; // límite del plan gratuito por consulta de fechas
 
 async function apiGet(endpoint, params = {}) {
   const url = new URL(BASE + endpoint);
@@ -36,6 +41,10 @@ async function apiGet(endpoint, params = {}) {
     throw new Error(`HTTP ${res.status} en ${endpoint}: ${await res.text()}`);
   }
   return res.json();
+}
+
+function fechaISO(date) {
+  return date.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
 function normalizeMatch(m, leagueKey) {
@@ -81,33 +90,33 @@ async function main() {
   const proximos = [];
   let huboErrores = false;
 
+  const hoy = new Date();
+  const desde = new Date(hoy); desde.setDate(desde.getDate() - MAX_DIAS_RANGO);
+  const hasta = new Date(hoy); hasta.setDate(hasta.getDate() + MAX_DIAS_RANGO);
+
   for (const [leagueKey, cfg] of Object.entries(leaguesConfig)) {
     if (!cfg || cfg.provider !== 'football-data' || !cfg.code) {
-      console.log(`⏭  ${leagueKey}: sin automatización configurada (provider distinto de football-data, o sin code) — entrada manual desde la web.`);
+      console.log(`⏭  ${leagueKey}: sin automatización configurada — entrada manual desde la web.`);
       continue;
     }
     try {
-      console.log(`↓ ${leagueKey} (${cfg.code}): consultando jornada actual...`);
-      const comp = await apiGet(`/competitions/${cfg.code}`);
-      const currentMatchday = comp.currentSeason && comp.currentSeason.currentMatchday;
-      if (!currentMatchday) throw new Error('La API no devolvió una jornada actual (currentMatchday vacío).');
+      console.log(`↓ ${leagueKey} (${cfg.code}): partidos entre ${fechaISO(desde)} y ${fechaISO(hoy)} (resultados)...`);
+      const pasados = await apiGet(`/competitions/${cfg.code}/matches`, {
+        dateFrom: fechaISO(desde), dateTo: fechaISO(hoy),
+      });
+      (pasados.matches || []).forEach(m => {
+        const norm = normalizeMatch(m, leagueKey);
+        if (norm.resultado) resultadosById.set(norm.id, norm);
+      });
 
-      console.log(`↓ ${leagueKey}: resultados de la jornada ${currentMatchday - 1}...`);
-      if (currentMatchday > 1) {
-        const prev = await apiGet(`/competitions/${cfg.code}/matches`, { matchday: currentMatchday - 1 });
-        (prev.matches || []).forEach(m => {
-          const norm = normalizeMatch(m, leagueKey);
-          if (norm.resultado) resultadosById.set(norm.id, norm);
-        });
-      }
-
-      console.log(`↓ ${leagueKey}: partidos de la jornada ${currentMatchday}...`);
-      const current = await apiGet(`/competitions/${cfg.code}/matches`, { matchday: currentMatchday });
-      (current.matches || []).forEach(m => {
+      console.log(`↓ ${leagueKey}: partidos entre ${fechaISO(hoy)} y ${fechaISO(hasta)} (próximos)...`);
+      const futuros = await apiGet(`/competitions/${cfg.code}/matches`, {
+        dateFrom: fechaISO(hoy), dateTo: fechaISO(hasta),
+      });
+      (futuros.matches || []).forEach(m => {
         const norm = normalizeMatch(m, leagueKey);
         if (norm.resultado) {
-          // ya se jugó (jornada en curso con partidos ya finalizados)
-          resultadosById.set(norm.id, norm);
+          resultadosById.set(norm.id, norm); // ya jugado dentro de esta ventana
         } else {
           proximos.push({
             id: norm.id, league: leagueKey, date: norm.date, round: norm.round,
