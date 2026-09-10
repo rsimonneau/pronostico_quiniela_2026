@@ -24,7 +24,7 @@ jobs:
 
       - name: Descargar datos de API-Football
         env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
         run: node scripts/fetch-data.js
 
       - name: Publicar cambios si los hay
