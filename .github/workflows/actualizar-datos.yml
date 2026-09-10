@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Descargar datos de API-Football
+      - name: Descargar datos de football-data.org
         env:
           FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
         run: node scripts/fetch-data.js
@@ -32,5 +32,7 @@ jobs:
           git config user.name "quiniela-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/resultados.json data/proximos.json
-          git diff --cached --quiet || git commit -m "Actualizar datos de jornada [automático]"
+          git diff --cached --quiet && exit 0
+          git commit -m "Actualizar datos de jornada [automático]"
+          git pull --rebase origin main
           git push
