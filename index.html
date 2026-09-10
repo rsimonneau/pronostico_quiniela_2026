@@ -675,16 +675,37 @@ function openMatchDialog(){
 
 /* ---- Importar próxima jornada desde la API ---- */
 function normTeamName(s){
-  // OJO: no se eliminan palabras como "atlético" o "athletic" — son parte
-  // distintiva del nombre (Real Madrid != Atlético Madrid).
+  // OJO: no se eliminan palabras identitarias como "real", "atlético" o
+  // "deportivo" — son parte distintiva del nombre. Solo se quitan sufijos
+  // de forma jurídica (CF/SD/...) y el conector "de".
   return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
-    .replace(/\b(cf|sd|cd|ud|rc|rcd|fc|club|deportivo|real|de)\b/g,'')
+    .replace(/\b(cf|sd|cd|ud|rc|rcd|fc|club|de)\b/g,'')
     .replace(/[^a-z0-9]+/g,' ').trim();
 }
 
+function teamNameTokens(s){
+  return normTeamName(s).split(' ').filter(Boolean);
+}
+
+// Nombres de ciudad que varios clubes distintos comparten como modificador
+// (p.ej. "Rayo Vallecano DE MADRID" y "Real Madrid" comparten "madrid").
+// Si el nombre corto local se reduce a solo uno de estos, exigimos igualdad
+// exacta en vez de contención — si no, un "Barcelona" local casaría por
+// error con "RCD Espanyol de Barcelona".
+const TEAM_NAME_DENY_SOLO = new Set(['madrid','barcelona','sevilla','valencia','vigo']);
+
+function teamNamesMatch(a, b){
+  const tokensA = teamNameTokens(a), tokensB = teamNameTokens(b);
+  if(tokensA.length===0 || tokensB.length===0) return false;
+  const [shorter, longer] = tokensA.length <= tokensB.length ? [tokensA, tokensB] : [tokensB, tokensA];
+  if(shorter.length===1 && TEAM_NAME_DENY_SOLO.has(shorter[0])){
+    return shorter.length===longer.length && shorter[0]===longer[0];
+  }
+  return shorter.every(tok => longer.includes(tok));
+}
+
 function findTeamByName(apiName, league){
-  const target = normTeamName(apiName);
-  const match = Object.entries(db.teams).find(([id,t]) => t.league===league && normTeamName(t.name)===target);
+  const match = Object.entries(db.teams).find(([id,t]) => t.league===league && teamNamesMatch(t.name, apiName));
   return match ? match[0] : null;
 }
 
