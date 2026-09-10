@@ -153,6 +153,7 @@
   .column-list .teams{flex:1;}
   .column-list .marks{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:2px;}
   .column-list .marks.double{color:var(--red);}
+  .column-list .marks.triple{color:var(--gold);}
   .disclaimer{
     margin-top:18px; padding:14px; background:var(--card); border:1px solid var(--paper-line);
     border-radius:10px; font-size:12px; color:var(--ink-soft); line-height:1.6;
@@ -318,10 +319,28 @@ function absenceDefensePenalty(abs){
   return Math.max(0.65, 1.0 - 0.07*abs.defendersOut - 0.02*abs.totalOut);
 }
 
+// Traduce la diferencia de Elo en un multiplicador de ataque/defensa, para
+// que el marcador probable (Poisson) refleje al favorito igual que ya
+// refleja el 1/X/2 (Elo). Sin esto, dos equipos con Elo muy distinto pero
+// con el mismo "attack"/"defense" genérico (1.0, el valor de partida de todo
+// equipo nuevo) generaban siempre el mismo marcador esperado.
+// Acotado a [0.6, 1.8] para que una diferencia de Elo enorme no dispare el
+// marcador a algo absurdo.
+function eloAttackFactor(elo){
+  return Math.max(0.6, Math.min(1.8, Math.pow(10, (elo-1500)/1000)));
+}
+function eloDefenseFactor(elo){
+  // Un Elo alto en el rival implica MENOS goles encajados por el equipo con
+  // ese Elo, así que el factor es inverso.
+  return Math.max(0.6, Math.min(1.8, Math.pow(10, -(elo-1500)/1000)));
+}
+
 function expectedGoals(home, away, cfg, homeAbs, awayAbs, qHome, qAway){
   const lamHome = cfg.avgGoalsHome * home.attack * away.defense
+    * eloAttackFactor(home.elo) * eloDefenseFactor(away.elo)
     * absenceAttackPenalty(homeAbs) * absenceDefensePenalty(awayAbs) * (1+qHome);
   const lamAway = cfg.avgGoalsAway * away.attack * home.defense
+    * eloAttackFactor(away.elo) * eloDefenseFactor(home.elo)
     * absenceAttackPenalty(awayAbs) * absenceDefensePenalty(homeAbs) * (1+qAway);
   return [Math.max(0.1,lamHome), Math.max(0.1,lamAway)];
 }
@@ -813,34 +832,95 @@ function renderColumna(){
     return;
   }
   const predictions = db.jornada.matches.map(m=>({m, pred:computePrediction(m)})).filter(x=>x.pred);
-  const margins = predictions.map((x,i)=>{
-    const probs=[x.pred.pH,x.pred.pD,x.pred.pA].sort((a,b)=>b-a);
-    return { margin: probs[0]-probs[1], i };
-  }).sort((a,b)=>a.margin-b.margin);
+  const n = predictions.length;
 
-  const maxDoubles = 3;
-  const doublesIdx = new Set(margins.slice(0,maxDoubles).filter(x=>predictions[x.i].pred.recommendDouble).map(x=>x.i));
+  db.columnaConfig = db.columnaConfig || { dobles: Math.min(3, n), triples: 0 };
+  // nunca más reducciones de las que caben en la jornada
+  db.columnaConfig.dobles = Math.max(0, Math.min(db.columnaConfig.dobles, n));
+  db.columnaConfig.triples = Math.max(0, Math.min(db.columnaConfig.triples, n - db.columnaConfig.dobles));
 
-  let html = `<h2 class="section-title">Columna — ${escapeHtml(db.jornada.label)}</h2><ul class="column-list">`;
-  predictions.forEach((x,i)=>{
+  // Para cada partido: probabilidades ordenadas y dos métricas.
+  // - margin2: distancia entre el signo más probable y el 2º -> cuanto más
+  //   pequeña, más "reñido" a dos bandas -> mejor candidato a DOBLE.
+  // - spread3: distancia entre el 1º y el 3º -> cuanto más pequeña, más
+  //   repartida está la probabilidad entre los tres signos -> mejor
+  //   candidato a TRIPLE (partido genuinamente imprevisible, no solo entre
+  //   dos opciones).
+  const analysis = predictions.map((x, i) => {
+    const sorted = [
+      { sign: '1', p: x.pred.pH }, { sign: 'X', p: x.pred.pD }, { sign: '2', p: x.pred.pA }
+    ].sort((a, b) => b.p - a.p);
+    return {
+      i, sorted,
+      margin2: sorted[0].p - sorted[1].p,
+      spread3: sorted[0].p - sorted[2].p,
+    };
+  });
+
+  // 1º se asignan los triples a los partidos más imprevisibles (spread3 más
+  // bajo); del resto, los dobles a los más reñidos a dos bandas.
+  const byTriple = [...analysis].sort((a, b) => a.spread3 - b.spread3);
+  const tripleIdx = new Set(byTriple.slice(0, db.columnaConfig.triples).map(a => a.i));
+
+  const remaining = analysis.filter(a => !tripleIdx.has(a.i));
+  const byDouble = [...remaining].sort((a, b) => a.margin2 - b.margin2);
+  const doubleIdx = new Set(byDouble.slice(0, db.columnaConfig.dobles).map(a => a.i));
+
+  let html = `<h2 class="section-title">Columna — ${escapeHtml(db.jornada.label)}</h2>`;
+
+  html += `<div class="info-box">
+    <b>Dobles y triples:</b> cubren más de un signo en un partido para reducir el riesgo de fallar el pleno, a cambio de multiplicar el número de apuestas que juegas (2 columnas por cada doble, 3 por cada triple — se multiplican entre sí si combinas varios).
+    <div style="display:flex; gap:16px; margin-top:10px; flex-wrap:wrap;">
+      <div>
+        <label class="field">Dobles</label>
+        <input type="number" id="numDobles" min="0" max="${n}" value="${db.columnaConfig.dobles}" style="width:80px;">
+      </div>
+      <div>
+        <label class="field">Triples</label>
+        <input type="number" id="numTriples" min="0" max="${n}" value="${db.columnaConfig.triples}" style="width:80px;">
+      </div>
+    </div>
+  </div>`;
+
+  html += `<ul class="column-list">`;
+  predictions.forEach((x, i) => {
     const home = ensureTeam(x.m.homeId), away = ensureTeam(x.m.awayId);
-    const isDouble = doublesIdx.has(i);
-    const marks = isDouble ? x.pred.doubleSigns : x.pred.sign;
+    const a = analysis[i];
+    let marks, cls;
+    if (tripleIdx.has(i)) {
+      marks = '1X2'; cls = 'triple';
+    } else if (doubleIdx.has(i)) {
+      marks = a.sorted.slice(0, 2).map(s => s.sign).sort().join(''); cls = 'double';
+    } else {
+      marks = a.sorted[0].sign; cls = '';
+    }
     html += `<li>
-      <span class="n mono">${String(i+1).padStart(2,'0')}</span>
+      <span class="n mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="teams">${escapeHtml(home.name)} - ${escapeHtml(away.name)}</span>
-      <span class="marks ${isDouble?'double':''} mono">${marks}</span>
+      <span class="marks ${cls} mono">${marks}</span>
     </li>`;
   });
   html += `</ul>`;
 
-  const avgConf = predictions.reduce((s,x)=>s+x.pred.confidence,0)/predictions.length;
+  const totalColumnas = Math.pow(2, doubleIdx.size) * Math.pow(3, tripleIdx.size);
+  const avgConf = predictions.reduce((s, x) => s + x.pred.confidence, 0) / n;
   html += `<div class="disclaimer">
-    Confianza media por signo: <b>${Math.round(avgConf*100)}%</b>. Esto <b>no</b> es la probabilidad de acertar los ${predictions.length} juntos:
-    con partidos independientes, incluso una confianza media alta da una probabilidad de pleno exacto muy baja sin dobles.
-    Se han marcado ${doublesIdx.size} dobles en los partidos más reñidos para gestionar ese riesgo — no elimina la incertidumbre, la reparte.
+    Confianza media por signo: <b>${Math.round(avgConf * 100)}%</b>. Esto <b>no</b> es la probabilidad de acertar los ${n} juntos.
+    Con ${doubleIdx.size} doble(s) y ${tripleIdx.size} triple(s) esta combinación equivale a <b>${totalColumnas} columna${totalColumnas === 1 ? '' : 's'} simples</b> jugadas a la vez
+    (multiplica el coste del boleto en la misma proporción). Los dobles/triples no eliminan la incertidumbre, la reparten.
   </div>`;
   app.innerHTML = html;
+
+  const applyConfig = () => {
+    const d = parseInt(document.getElementById('numDobles').value, 10);
+    const t = parseInt(document.getElementById('numTriples').value, 10);
+    db.columnaConfig.dobles = isNaN(d) ? 0 : d;
+    db.columnaConfig.triples = isNaN(t) ? 0 : t;
+    saveDB();
+    renderColumna();
+  };
+  document.getElementById('numDobles').addEventListener('change', applyConfig);
+  document.getElementById('numTriples').addEventListener('change', applyConfig);
 }
 
 /* ---- Tab: Equipos ---- */
