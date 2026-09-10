@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "fd_564678",
+    "league": "primera",
+    "date": "2026-09-15T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "RCD Espanyol de Barcelona"
+  },
+  {
+    "id": "fd_564680",
+    "league": "primera",
+    "date": "2026-09-15T18:00:00Z",
+    "round": "Jornada 6",
+    "home": "Deportivo Alavés",
+    "away": "Valencia CF"
+  },
+  {
+    "id": "fd_564681",
+    "league": "primera",
+    "date": "2026-09-15T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "Elche CF",
+    "away": "Real Madrid CF"
+  },
+  {
+    "id": "fd_564679",
+    "league": "primera",
+    "date": "2026-09-16T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "RC Deportivo La Coruña",
+    "away": "Sevilla FC"
+  },
+  {
+    "id": "fd_564684",
+    "league": "primera",
+    "date": "2026-09-16T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Club Atlético de Madrid",
+    "away": "CA Osasuna"
+  },
+  {
+    "id": "fd_564685",
+    "league": "primera",
+    "date": "2026-09-16T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "Levante UD",
+    "away": "Athletic Club"
+  },
+  {
+    "id": "fd_564687",
+    "league": "primera",
+    "date": "2026-09-16T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "FC Barcelona",
+    "away": "Real Racing Club de Santander"
+  },
+  {
+    "id": "fd_564686",
+    "league": "primera",
+    "date": "2026-09-17T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Real Betis Balompié",
+    "away": "Getafe CF"
+  },
+  {
+    "id": "fd_564683",
+    "league": "primera",
+    "date": "2026-09-17T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "Málaga CF",
+    "away": "Villarreal CF"
+  }
+]
