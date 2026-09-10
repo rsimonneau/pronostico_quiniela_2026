@@ -1,9 +1,15 @@
 {
-  "primera": { "id": 140, "name": "Primera División (La Liga)" },
-  "segunda": { "id": 141, "name": "Segunda División" },
+  "primera": {
+    "provider": "football-data",
+    "code": "PD",
+    "name": "Primera División (La Liga) — automatizada vía football-data.org"
+  },
+  "segunda": {
+    "provider": "manual",
+    "name": "Segunda División — sin API gratuita con temporada actual conocida; entrada manual desde la web"
+  },
   "liga_f": {
-    "id": null,
-    "name": "Liga F",
-    "_pendiente": "Verifica el ID correcto con: API_FOOTBALL_KEY=tu_clave node scripts/find-league-id.js \"Liga F\" — y comprueba también que tu plan (gratis o de pago) cubra fixtures de esta competición antes de rellenar el id."
+    "provider": "manual",
+    "name": "Liga F — sin API gratuita con temporada actual conocida; entrada manual desde la web"
   }
 }
