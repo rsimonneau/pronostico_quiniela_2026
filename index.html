@@ -459,14 +459,9 @@ function renderJornada(){
     return;
   }
 
-  if(Object.keys(db.teams).length===0){
-    app.innerHTML = `<div class="empty"><div class="big">Primero añade equipos en la pestaña <b>Equipos</b> (nombre, liga y, si quieres, la plantilla).</div></div>`;
-    return;
-  }
-
   let html = `<h2 class="section-title">${escapeHtml(db.jornada.label)}</h2>`;
   if(db.jornada.matches.length===0){
-    html += `<div class="empty"><div class="big">Añade tu primer partido con el botón de abajo.</div></div>`;
+    html += `<div class="empty"><div class="big">Añade partidos con "+ Partido" o trae los de Primera automáticamente con "↓ Importar API" (abajo).</div></div>`;
   } else {
     db.jornada.matches.forEach((match, idx)=>{
       html += renderCoupon(match, idx);
@@ -692,7 +687,7 @@ function teamNameTokens(s){
 // Si el nombre corto local se reduce a solo uno de estos, exigimos igualdad
 // exacta en vez de contención — si no, un "Barcelona" local casaría por
 // error con "RCD Espanyol de Barcelona".
-const TEAM_NAME_DENY_SOLO = new Set(['madrid','barcelona','sevilla','valencia','vigo']);
+const TEAM_NAME_DENY_SOLO = new Set(['madrid','barcelona','sevilla','valencia','vigo','deportivo']);
 
 function teamNamesMatch(a, b){
   const tokensA = teamNameTokens(a), tokensB = teamNameTokens(b);
