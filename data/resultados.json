@@ -1,5 +1,93 @@
 [
   {
+    "id": "fd_564687",
+    "league": "primera",
+    "date": "2026-09-16T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "FC Barcelona",
+    "away": "Real Racing Club de Santander",
+    "golesLocal": 7,
+    "golesVisitante": 2,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564679",
+    "league": "primera",
+    "date": "2026-09-16T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "RC Deportivo La Coruña",
+    "away": "Sevilla FC",
+    "golesLocal": 0,
+    "golesVisitante": 1,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564684",
+    "league": "primera",
+    "date": "2026-09-16T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Club Atlético de Madrid",
+    "away": "CA Osasuna",
+    "golesLocal": 4,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564685",
+    "league": "primera",
+    "date": "2026-09-16T00:00:00Z",
+    "round": "Jornada 6",
+    "home": "Levante UD",
+    "away": "Athletic Club",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564681",
+    "league": "primera",
+    "date": "2026-09-15T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "Elche CF",
+    "away": "Real Madrid CF",
+    "golesLocal": 2,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564680",
+    "league": "primera",
+    "date": "2026-09-15T18:00:00Z",
+    "round": "Jornada 6",
+    "home": "Deportivo Alavés",
+    "away": "Valencia CF",
+    "golesLocal": 0,
+    "golesVisitante": 1,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564678",
+    "league": "primera",
+    "date": "2026-09-15T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "RCD Espanyol de Barcelona",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564671",
+    "league": "primera",
+    "date": "2026-09-14T19:00:00Z",
+    "round": "Jornada 5",
+    "home": "Villarreal CF",
+    "away": "Real Betis Balompié",
+    "golesLocal": 1,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
     "id": "fd_564674",
     "league": "primera",
     "date": "2026-09-13T19:00:00Z",
