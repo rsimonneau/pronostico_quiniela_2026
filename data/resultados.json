@@ -1,5 +1,137 @@
 [
   {
+    "id": "fd_564689",
+    "league": "primera",
+    "date": "2026-09-20T19:00:00Z",
+    "round": "Jornada 7",
+    "home": "Valencia CF",
+    "away": "Real Sociedad de Fútbol",
+    "golesLocal": 2,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564695",
+    "league": "primera",
+    "date": "2026-09-20T16:30:00Z",
+    "round": "Jornada 7",
+    "home": "RC Deportivo La Coruña",
+    "away": "Real Betis Balompié",
+    "golesLocal": 1,
+    "golesVisitante": 1,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564696",
+    "league": "primera",
+    "date": "2026-09-20T16:30:00Z",
+    "round": "Jornada 7",
+    "home": "Villarreal CF",
+    "away": "Levante UD",
+    "golesLocal": 3,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564688",
+    "league": "primera",
+    "date": "2026-09-20T14:15:00Z",
+    "round": "Jornada 7",
+    "home": "Club Atlético de Madrid",
+    "away": "Real Madrid CF",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564697",
+    "league": "primera",
+    "date": "2026-09-20T12:00:00Z",
+    "round": "Jornada 7",
+    "home": "Getafe CF",
+    "away": "Málaga CF",
+    "golesLocal": 1,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564690",
+    "league": "primera",
+    "date": "2026-09-19T19:00:00Z",
+    "round": "Jornada 7",
+    "home": "Sevilla FC",
+    "away": "FC Barcelona",
+    "golesLocal": 1,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564694",
+    "league": "primera",
+    "date": "2026-09-19T16:30:00Z",
+    "round": "Jornada 7",
+    "home": "RC Celta de Vigo",
+    "away": "Real Racing Club de Santander",
+    "golesLocal": 5,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564691",
+    "league": "primera",
+    "date": "2026-09-19T14:15:00Z",
+    "round": "Jornada 7",
+    "home": "Athletic Club",
+    "away": "Deportivo Alavés",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564693",
+    "league": "primera",
+    "date": "2026-09-19T12:00:00Z",
+    "round": "Jornada 7",
+    "home": "CA Osasuna",
+    "away": "Rayo Vallecano de Madrid",
+    "golesLocal": 1,
+    "golesVisitante": 1,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564692",
+    "league": "primera",
+    "date": "2026-09-18T19:00:00Z",
+    "round": "Jornada 7",
+    "home": "RCD Espanyol de Barcelona",
+    "away": "Elche CF",
+    "golesLocal": 1,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564683",
+    "league": "primera",
+    "date": "2026-09-17T19:30:00Z",
+    "round": "Jornada 6",
+    "home": "Málaga CF",
+    "away": "Villarreal CF",
+    "golesLocal": 1,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564686",
+    "league": "primera",
+    "date": "2026-09-17T17:00:00Z",
+    "round": "Jornada 6",
+    "home": "Real Betis Balompié",
+    "away": "Getafe CF",
+    "golesLocal": 1,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
     "id": "fd_564687",
     "league": "primera",
     "date": "2026-09-16T19:30:00Z",
