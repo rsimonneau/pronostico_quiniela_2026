@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "fd_564706",
+    "league": "primera",
+    "date": "2026-10-09T19:00:00Z",
+    "round": "Jornada 8",
+    "home": "Málaga CF",
+    "away": "RCD Espanyol de Barcelona"
+  },
+  {
+    "id": "fd_564698",
+    "league": "primera",
+    "date": "2026-10-10T12:00:00Z",
+    "round": "Jornada 8",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "Athletic Club"
+  },
+  {
+    "id": "fd_564699",
+    "league": "primera",
+    "date": "2026-10-10T14:15:00Z",
+    "round": "Jornada 8",
+    "home": "Deportivo Alavés",
+    "away": "Club Atlético de Madrid"
+  },
+  {
+    "id": "fd_564700",
+    "league": "primera",
+    "date": "2026-10-10T16:30:00Z",
+    "round": "Jornada 8",
+    "home": "FC Barcelona",
+    "away": "Getafe CF"
+  },
+  {
+    "id": "fd_564702",
+    "league": "primera",
+    "date": "2026-10-10T19:00:00Z",
+    "round": "Jornada 8",
+    "home": "Real Madrid CF",
+    "away": "Villarreal CF"
+  },
+  {
+    "id": "fd_564703",
+    "league": "primera",
+    "date": "2026-10-11T12:00:00Z",
+    "round": "Jornada 8",
+    "home": "Elche CF",
+    "away": "RC Celta de Vigo"
+  },
+  {
+    "id": "fd_564707",
+    "league": "primera",
+    "date": "2026-10-11T14:15:00Z",
+    "round": "Jornada 8",
+    "home": "Real Sociedad de Fútbol",
+    "away": "RC Deportivo La Coruña"
+  },
+  {
+    "id": "fd_564701",
+    "league": "primera",
+    "date": "2026-10-11T16:30:00Z",
+    "round": "Jornada 8",
+    "home": "Real Betis Balompié",
+    "away": "CA Osasuna"
+  },
+  {
+    "id": "fd_564705",
+    "league": "primera",
+    "date": "2026-10-11T19:00:00Z",
+    "round": "Jornada 8",
+    "home": "Real Racing Club de Santander",
+    "away": "Valencia CF"
+  }
+]
