@@ -78,5 +78,77 @@
     "round": "Jornada 8",
     "home": "Levante UD",
     "away": "Sevilla FC"
+  },
+  {
+    "id": "fd_564716",
+    "league": "primera",
+    "date": "2026-10-16T19:00:00Z",
+    "round": "Jornada 9",
+    "home": "RC Deportivo La Coruña",
+    "away": "Levante UD"
+  },
+  {
+    "id": "fd_564710",
+    "league": "primera",
+    "date": "2026-10-17T12:00:00Z",
+    "round": "Jornada 9",
+    "home": "RCD Espanyol de Barcelona",
+    "away": "Club Atlético de Madrid"
+  },
+  {
+    "id": "fd_564708",
+    "league": "primera",
+    "date": "2026-10-17T14:15:00Z",
+    "round": "Jornada 9",
+    "home": "Villarreal CF",
+    "away": "Elche CF"
+  },
+  {
+    "id": "fd_564713",
+    "league": "primera",
+    "date": "2026-10-17T16:30:00Z",
+    "round": "Jornada 9",
+    "home": "Real Betis Balompié",
+    "away": "FC Barcelona"
+  },
+  {
+    "id": "fd_564711",
+    "league": "primera",
+    "date": "2026-10-17T19:00:00Z",
+    "round": "Jornada 9",
+    "home": "Valencia CF",
+    "away": "Athletic Club"
+  },
+  {
+    "id": "fd_564715",
+    "league": "primera",
+    "date": "2026-10-18T12:00:00Z",
+    "round": "Jornada 9",
+    "home": "CA Osasuna",
+    "away": "Real Racing Club de Santander"
+  },
+  {
+    "id": "fd_564712",
+    "league": "primera",
+    "date": "2026-10-18T14:15:00Z",
+    "round": "Jornada 9",
+    "home": "RC Celta de Vigo",
+    "away": "Deportivo Alavés"
+  },
+  {
+    "id": "fd_564714",
+    "league": "primera",
+    "date": "2026-10-18T16:30:00Z",
+    "round": "Jornada 9",
+    "home": "Málaga CF",
+    "away": "Real Sociedad de Fútbol"
+  },
+  {
+    "id": "fd_564709",
+    "league": "primera",
+    "date": "2026-10-18T19:00:00Z",
+    "round": "Jornada 9",
+    "home": "Real Madrid CF",
+    "away": "Sevilla FC"
   }
 ]
