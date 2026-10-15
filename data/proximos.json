@@ -1,13 +1,5 @@
 [
   {
-    "id": "fd_564704",
-    "league": "primera",
-    "date": "2026-10-12T19:00:00Z",
-    "round": "Jornada 8",
-    "home": "Levante UD",
-    "away": "Sevilla FC"
-  },
-  {
     "id": "fd_564716",
     "league": "primera",
     "date": "2026-10-16T19:00:00Z",
@@ -86,5 +78,77 @@
     "round": "Jornada 9",
     "home": "Getafe CF",
     "away": "Rayo Vallecano de Madrid"
+  },
+  {
+    "id": "fd_564719",
+    "league": "primera",
+    "date": "2026-10-23T19:00:00Z",
+    "round": "Jornada 10",
+    "home": "Deportivo Alavés",
+    "away": "Málaga CF"
+  },
+  {
+    "id": "fd_564718",
+    "league": "primera",
+    "date": "2026-10-24T12:00:00Z",
+    "round": "Jornada 10",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "Elche CF"
+  },
+  {
+    "id": "fd_564727",
+    "league": "primera",
+    "date": "2026-10-24T14:15:00Z",
+    "round": "Jornada 10",
+    "home": "Real Racing Club de Santander",
+    "away": "RCD Espanyol de Barcelona"
+  },
+  {
+    "id": "fd_564722",
+    "league": "primera",
+    "date": "2026-10-24T16:30:00Z",
+    "round": "Jornada 10",
+    "home": "Valencia CF",
+    "away": "Villarreal CF"
+  },
+  {
+    "id": "fd_564724",
+    "league": "primera",
+    "date": "2026-10-24T19:00:00Z",
+    "round": "Jornada 10",
+    "home": "Club Atlético de Madrid",
+    "away": "RC Deportivo La Coruña"
+  },
+  {
+    "id": "fd_564720",
+    "league": "primera",
+    "date": "2026-10-25T13:00:00Z",
+    "round": "Jornada 10",
+    "home": "Athletic Club",
+    "away": "Getafe CF"
+  },
+  {
+    "id": "fd_564725",
+    "league": "primera",
+    "date": "2026-10-25T15:15:00Z",
+    "round": "Jornada 10",
+    "home": "RC Celta de Vigo",
+    "away": "Real Betis Balompié"
+  },
+  {
+    "id": "fd_564726",
+    "league": "primera",
+    "date": "2026-10-25T17:30:00Z",
+    "round": "Jornada 10",
+    "home": "Real Sociedad de Fútbol",
+    "away": "Levante UD"
+  },
+  {
+    "id": "fd_564723",
+    "league": "primera",
+    "date": "2026-10-25T20:00:00Z",
+    "round": "Jornada 10",
+    "home": "FC Barcelona",
+    "away": "Real Madrid CF"
   }
 ]
