@@ -6,8 +6,19 @@
     "round": "Jornada 6",
     "home": "Levante UD",
     "away": "Athletic Club",
-    "golesLocal": 0,
-    "golesVisitante": 0,
+    "golesLocal": 3,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564717",
+    "league": "primera",
+    "date": "2026-10-19T19:00:00Z",
+    "round": "Jornada 9",
+    "home": "Getafe CF",
+    "away": "Rayo Vallecano de Madrid",
+    "golesLocal": 1,
+    "golesVisitante": 1,
     "resultado": "D"
   },
   {
