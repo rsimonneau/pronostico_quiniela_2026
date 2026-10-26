@@ -1,5 +1,104 @@
 [
   {
+    "id": "fd_564723",
+    "league": "primera",
+    "date": "2026-10-25T20:00:00Z",
+    "round": "Jornada 10",
+    "home": "FC Barcelona",
+    "away": "Real Madrid CF",
+    "golesLocal": 1,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564726",
+    "league": "primera",
+    "date": "2026-10-25T17:30:00Z",
+    "round": "Jornada 10",
+    "home": "Real Sociedad de Fútbol",
+    "away": "Levante UD",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564725",
+    "league": "primera",
+    "date": "2026-10-25T15:15:00Z",
+    "round": "Jornada 10",
+    "home": "RC Celta de Vigo",
+    "away": "Real Betis Balompié",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564720",
+    "league": "primera",
+    "date": "2026-10-25T13:00:00Z",
+    "round": "Jornada 10",
+    "home": "Athletic Club",
+    "away": "Getafe CF",
+    "golesLocal": 4,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564724",
+    "league": "primera",
+    "date": "2026-10-24T19:00:00Z",
+    "round": "Jornada 10",
+    "home": "Club Atlético de Madrid",
+    "away": "RC Deportivo La Coruña",
+    "golesLocal": 1,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564722",
+    "league": "primera",
+    "date": "2026-10-24T16:30:00Z",
+    "round": "Jornada 10",
+    "home": "Valencia CF",
+    "away": "Villarreal CF",
+    "golesLocal": 1,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564727",
+    "league": "primera",
+    "date": "2026-10-24T14:15:00Z",
+    "round": "Jornada 10",
+    "home": "Real Racing Club de Santander",
+    "away": "RCD Espanyol de Barcelona",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564718",
+    "league": "primera",
+    "date": "2026-10-24T12:00:00Z",
+    "round": "Jornada 10",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "Elche CF",
+    "golesLocal": 0,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564719",
+    "league": "primera",
+    "date": "2026-10-23T19:00:00Z",
+    "round": "Jornada 10",
+    "home": "Deportivo Alavés",
+    "away": "Málaga CF",
+    "golesLocal": 1,
+    "golesVisitante": 1,
+    "resultado": "D"
+  },
+  {
     "id": "fd_564685",
     "league": "primera",
     "date": "2026-10-21T18:00:00Z",
