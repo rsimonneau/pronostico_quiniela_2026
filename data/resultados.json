@@ -1,5 +1,104 @@
 [
   {
+    "id": "fd_564729",
+    "league": "primera",
+    "date": "2026-11-01T20:00:00Z",
+    "round": "Jornada 11",
+    "home": "Athletic Club",
+    "away": "Real Sociedad de Fútbol",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564728",
+    "league": "primera",
+    "date": "2026-11-01T17:30:00Z",
+    "round": "Jornada 11",
+    "home": "Elche CF",
+    "away": "Valencia CF",
+    "golesLocal": 0,
+    "golesVisitante": 1,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564734",
+    "league": "primera",
+    "date": "2026-11-01T15:15:00Z",
+    "round": "Jornada 11",
+    "home": "Real Racing Club de Santander",
+    "away": "Real Madrid CF",
+    "golesLocal": 0,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564733",
+    "league": "primera",
+    "date": "2026-11-01T13:00:00Z",
+    "round": "Jornada 11",
+    "home": "Getafe CF",
+    "away": "Sevilla FC",
+    "golesLocal": 3,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564732",
+    "league": "primera",
+    "date": "2026-10-31T20:00:00Z",
+    "round": "Jornada 11",
+    "home": "FC Barcelona",
+    "away": "Deportivo Alavés",
+    "golesLocal": 6,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564736",
+    "league": "primera",
+    "date": "2026-10-31T17:30:00Z",
+    "round": "Jornada 11",
+    "home": "Real Betis Balompié",
+    "away": "Málaga CF",
+    "golesLocal": 2,
+    "golesVisitante": 1,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564735",
+    "league": "primera",
+    "date": "2026-10-31T15:15:00Z",
+    "round": "Jornada 11",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "RC Celta de Vigo",
+    "golesLocal": 3,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564730",
+    "league": "primera",
+    "date": "2026-10-31T13:00:00Z",
+    "round": "Jornada 11",
+    "home": "Levante UD",
+    "away": "Club Atlético de Madrid",
+    "golesLocal": 0,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564737",
+    "league": "primera",
+    "date": "2026-10-30T20:00:00Z",
+    "round": "Jornada 11",
+    "home": "Villarreal CF",
+    "away": "RCD Espanyol de Barcelona",
+    "golesLocal": 0,
+    "golesVisitante": 1,
+    "resultado": "A"
+  },
+  {
     "id": "fd_564721",
     "league": "primera",
     "date": "2026-10-26T20:00:00Z",
