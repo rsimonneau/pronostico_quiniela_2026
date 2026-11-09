@@ -1,5 +1,115 @@
 [
   {
+    "id": "fd_564746",
+    "league": "primera",
+    "date": "2026-11-08T20:00:00Z",
+    "round": "Jornada 12",
+    "home": "Club Atlético de Madrid",
+    "away": "FC Barcelona",
+    "golesLocal": 1,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564742",
+    "league": "primera",
+    "date": "2026-11-08T17:30:00Z",
+    "round": "Jornada 12",
+    "home": "RC Celta de Vigo",
+    "away": "Levante UD",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564747",
+    "league": "primera",
+    "date": "2026-11-08T17:30:00Z",
+    "round": "Jornada 12",
+    "home": "Villarreal CF",
+    "away": "Getafe CF",
+    "golesLocal": 2,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564743",
+    "league": "primera",
+    "date": "2026-11-08T15:15:00Z",
+    "round": "Jornada 12",
+    "home": "Real Sociedad de Fútbol",
+    "away": "Rayo Vallecano de Madrid",
+    "golesLocal": 1,
+    "golesVisitante": 0,
+    "resultado": "H"
+  },
+  {
+    "id": "fd_564738",
+    "league": "primera",
+    "date": "2026-11-08T13:00:00Z",
+    "round": "Jornada 12",
+    "home": "Elche CF",
+    "away": "Real Betis Balompié",
+    "golesLocal": 0,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564741",
+    "league": "primera",
+    "date": "2026-11-07T20:00:00Z",
+    "round": "Jornada 12",
+    "home": "Valencia CF",
+    "away": "Real Madrid CF",
+    "golesLocal": 0,
+    "golesVisitante": 3,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564739",
+    "league": "primera",
+    "date": "2026-11-07T17:30:00Z",
+    "round": "Jornada 12",
+    "home": "CA Osasuna",
+    "away": "Athletic Club",
+    "golesLocal": 1,
+    "golesVisitante": 1,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564745",
+    "league": "primera",
+    "date": "2026-11-07T15:15:00Z",
+    "round": "Jornada 12",
+    "home": "RCD Espanyol de Barcelona",
+    "away": "RC Deportivo La Coruña",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
+    "id": "fd_564744",
+    "league": "primera",
+    "date": "2026-11-07T13:00:00Z",
+    "round": "Jornada 12",
+    "home": "Málaga CF",
+    "away": "Real Racing Club de Santander",
+    "golesLocal": 1,
+    "golesVisitante": 2,
+    "resultado": "A"
+  },
+  {
+    "id": "fd_564740",
+    "league": "primera",
+    "date": "2026-11-06T20:00:00Z",
+    "round": "Jornada 12",
+    "home": "Sevilla FC",
+    "away": "Deportivo Alavés",
+    "golesLocal": 0,
+    "golesVisitante": 0,
+    "resultado": "D"
+  },
+  {
     "id": "fd_564731",
     "league": "primera",
     "date": "2026-11-02T20:00:00Z",
