@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "fd_564748",
+    "league": "primera",
+    "date": "2026-11-20T20:00:00Z",
+    "round": "Jornada 13",
+    "home": "Athletic Club",
+    "away": "RCD Espanyol de Barcelona"
+  },
+  {
+    "id": "fd_564755",
+    "league": "primera",
+    "date": "2026-11-21T13:00:00Z",
+    "round": "Jornada 13",
+    "home": "Deportivo Alavés",
+    "away": "RC Deportivo La Coruña"
+  },
+  {
+    "id": "fd_564751",
+    "league": "primera",
+    "date": "2026-11-21T15:15:00Z",
+    "round": "Jornada 13",
+    "home": "Rayo Vallecano de Madrid",
+    "away": "Valencia CF"
+  },
+  {
+    "id": "fd_564756",
+    "league": "primera",
+    "date": "2026-11-21T17:30:00Z",
+    "round": "Jornada 13",
+    "home": "Sevilla FC",
+    "away": "Real Betis Balompié"
+  },
+  {
+    "id": "fd_564754",
+    "league": "primera",
+    "date": "2026-11-21T20:00:00Z",
+    "round": "Jornada 13",
+    "home": "Real Madrid CF",
+    "away": "RC Celta de Vigo"
+  },
+  {
+    "id": "fd_564749",
+    "league": "primera",
+    "date": "2026-11-22T13:00:00Z",
+    "round": "Jornada 13",
+    "home": "FC Barcelona",
+    "away": "Villarreal CF"
+  },
+  {
+    "id": "fd_564750",
+    "league": "primera",
+    "date": "2026-11-22T15:15:00Z",
+    "round": "Jornada 13",
+    "home": "Real Racing Club de Santander",
+    "away": "Real Sociedad de Fútbol"
+  },
+  {
+    "id": "fd_564752",
+    "league": "primera",
+    "date": "2026-11-22T17:30:00Z",
+    "round": "Jornada 13",
+    "home": "CA Osasuna",
+    "away": "Málaga CF"
+  },
+  {
+    "id": "fd_564753",
+    "league": "primera",
+    "date": "2026-11-22T20:00:00Z",
+    "round": "Jornada 13",
+    "home": "Getafe CF",
+    "away": "Club Atlético de Madrid"
+  }
+]
