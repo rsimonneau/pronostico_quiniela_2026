@@ -70,5 +70,13 @@
     "round": "Jornada 13",
     "home": "Getafe CF",
     "away": "Club Atlético de Madrid"
+  },
+  {
+    "id": "fd_564757",
+    "league": "primera",
+    "date": "2026-11-23T20:00:00Z",
+    "round": "Jornada 13",
+    "home": "Levante UD",
+    "away": "Elche CF"
   }
 ]
